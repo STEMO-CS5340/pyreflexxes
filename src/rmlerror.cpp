@@ -18,6 +18,9 @@
 #include "rmlerror.h"
 
 #include <ReflexxesAPI.h>
+#include <string>
+#include <sstream>
+#include <iostream>
 
 namespace {
 std::string return_value_string(int value)

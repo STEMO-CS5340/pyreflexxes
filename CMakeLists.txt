@@ -2,29 +2,29 @@ cmake_minimum_required(VERSION 3.1)
 project(pyreflexxes)
 
 find_package(pybind11 2.2 REQUIRED)
-find_package(RMLTypeII)
-find_package(RMLTypeIV)
 
-if(NOT RMLTypeII_FOUND AND NOT RMLTypeIV_FOUND)
-  message(FATAL_ERROR "Reflexxes Motion Libraries (either Type II or Type IV) not found")
-endif()
+include_directories(
+  ./ReflexxesTypeII/include
+)
 
-if(RMLTypeII_FOUND)
-  pybind11_add_module(rml_type_ii
-    src/rmlerror.cpp
-    src/pyreflexxes.cpp
-    src/pyreflexxes_extra.cpp
-  )
-  target_link_libraries(rml_type_ii PRIVATE RMLTypeII::ReflexxesTypeII)
-  target_compile_definitions(rml_type_ii PRIVATE "RML_TYPE_II")
-endif()
+add_custom_target(ReflexxesTypeII
+  ${CMAKE_MAKE_PROGRAM}
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/ReflexxesTypeII
+)
 
-if(RMLTypeIV_FOUND)
-  pybind11_add_module(rml_type_iv
-    src/rmlerror.cpp
-    src/pyreflexxes.cpp
-    src/pyreflexxes_extra.cpp
-  )
-  target_link_libraries(rml_type_iv PRIVATE RMLTypeIV::ReflexxesTypeIV)
-  target_compile_definitions(rml_type_iv PRIVATE "RML_TYPE_IV")
+pybind11_add_module(rml_type_ii
+  src/rmlerror.cpp
+  src/pyreflexxes.cpp
+  src/pyreflexxes_extra.cpp
+)
+
+target_compile_definitions(rml_type_ii PRIVATE "RML_TYPE_II")
+
+if(UNIX)
+  # target_link_libraries(rml_type_ii PRIVATE ${CMAKE_SOURCE_DIR}/ReflexxesTypeII/Linux/x64/release/lib/static/libReflexxesTypeII.a)
+  target_link_libraries(rml_type_ii PRIVATE ${CMAKE_SOURCE_DIR}/ReflexxesTypeII/Linux/x64/release/lib/shared/libReflexxesTypeII.so)
+  elseif(APPLE)
+  target_link_libraries(rml_type_ii PRIVATE ${CMAKE_SOURCE_DIR}/ReflexxesTypeII/MacOS/x64/release/lib/libReflexxesTypeII.a)
+elseif(WIN32)
+  message(WARNING "Not Implemented in Cmake Yet!")
 endif()
