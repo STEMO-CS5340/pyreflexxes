@@ -1,4 +1,7 @@
 build/
-**/bin/
-**/obj/
-**/lib/
+**/bin/static/**
+**/bin/shared/**
+**/obj/static/**
+**/obj/shared/**
+**/lib/static/**
+**/lib/shared/**
