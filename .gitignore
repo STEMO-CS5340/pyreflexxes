@@ -5,3 +5,4 @@ build/
 **/obj/shared/**
 **/lib/static/**
 **/lib/shared/**
+!.keep
